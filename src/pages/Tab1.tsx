@@ -1,22 +1,43 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
+import React from 'react';
+import { useState } from 'react';
 import './Tab1.css';
-
+import RepoItem from '../components/RepoItem';
+import { RepositoryItem } from '../interfaces/RepositoryItem';
+import { fetchRepositories } from '../services/GithubService';
 const Tab1: React.FC = () => {
+  const[repos,SetRepos]=React.useState<RepositoryItem[]>([]);
+  const loadRepos= async()=>{
+    const reposData= await fetchRepositories();
+    SetRepos(reposData);
+  };
+  useIonViewDidEnter(()=>{
+    console.log("IownViewDidEnter - Cargando Repositorios")
+    loadRepos();
+  });
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 1</IonTitle>
+          <IonTitle>Repositorios</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
+            <IonTitle size="large">Repositorios</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+        <IonList>
+        {repos.map((repos, index)=>
+          <RepoItem 
+          key={index}
+          repo={repos}
+          />)}
+
+        </IonList>
+
+
       </IonContent>
     </IonPage>
   );

@@ -1,0 +1,123 @@
+/* ...existing code... */
+
+/* ...existing code... */
+
+/* fuerza color legible en el contenido y títulos del card (usa la variable de texto del tema) */
+ion-card,
+ion-card ion-card-content,
+ion-card ion-card-title,
+ion-card ion-card-subtitle {
+  color: var(--ion-text-color, rgba(0,0,0,0.9)) !important;
+}
+
+/* si el fondo del card fuera oscuro, usar contraste automático */
+@media (prefers-color-scheme: dark) {
+  ion-card,
+  ion-card ion-card-content,
+  ion-card ion-card-title,
+  ion-card ion-card-subtitle {
+    color: var(--ion-color-light, rgba(255,255,255,0.95)) !important;
+  }
+}
+
+/* ...existing code... */
+ion-card {
+  max-width: 900px;
+  margin: 12px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  background: var(--ion-background-color);
+}
+
+/* portada / cover image */
+ion-card > img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+/* header layout: avatar + texts */
+ion-card ion-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+/* avatar inside header */
+ion-card ion-avatar {
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* title / subtitle */
+ion-card ion-card-title {
+  font-size: 1.15rem;
+  margin: 0;
+  line-height: 1.1;
+}
+
+ion-card ion-card-subtitle {
+  font-size: 0.92rem;
+  color: var(--ion-color-medium);
+  margin-top: 4px;
+}
+
+/* content */
+ion-card ion-card-content {
+  padding: 12px 16px 18px;
+  font-size: 0.96rem;
+  color: var(--ion-color-primary-contrast, rgba(0,0,0,0.85));
+}
+
+/* small screens */
+@media (max-width: 480px) {
+  ion-card {
+    margin: 8px;
+  }
+  ion-card > img {
+    height: 120px;
+  }
+  ion-card ion-avatar {
+    width: 56px;
+    height: 56px;
+    flex: 0 0 56px;
+  }
+  ion-card ion-card-title {
+    font-size: 1rem;
+  }
+  ion-card ion-card-subtitle {
+    font-size: 0.85rem;
+  }
+  ion-card ion-card-content {
+    font-size: 0.92rem;
+  }
+}
+
+/* medium screens */
+@media (min-width: 481px) and (max-width: 1024px) {
+  ion-card > img {
+    height: 140px;
+  }
+  ion-card ion-avatar {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/* utilities */
+ion-card a {
+  color: var(--ion-color-primary);
+  text-decoration: none;
+}
+ion-card a:hover {
+  text-decoration: underline;
+}
+
+/* ...existing code... */

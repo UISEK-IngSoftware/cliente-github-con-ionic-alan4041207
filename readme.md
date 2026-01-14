@@ -3,9 +3,8 @@
 
 ## Información del Estudiante
 
-- **Nombre:** [Tu nombre completo aquí]
-- **Carrera:** [Tu carrera]
-- **Fecha de inicio:** [Fecha]
+- **Nombre:** Alan Diaz
+- **Carrera:** Ing Informatica
 
 ---
 

@@ -1,123 +1,109 @@
-/* ...existing code... */
-
-/* ...existing code... */
-
-/* fuerza color legible en el contenido y títulos del card (usa la variable de texto del tema) */
-ion-card,
-ion-card ion-card-content,
-ion-card ion-card-title,
-ion-card ion-card-subtitle {
-  color: var(--ion-text-color, rgba(0,0,0,0.9)) !important;
+.profile-content {
+  --background: var(--ion-background-color);
 }
 
-/* si el fondo del card fuera oscuro, usar contraste automático */
-@media (prefers-color-scheme: dark) {
-  ion-card,
-  ion-card ion-card-content,
-  ion-card ion-card-title,
-  ion-card ion-card-subtitle {
-    color: var(--ion-color-light, rgba(255,255,255,0.95)) !important;
-  }
-}
-
-/* ...existing code... */
-ion-card {
-  max-width: 900px;
-  margin: 12px auto;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  background: var(--ion-background-color);
-}
-
-/* portada / cover image */
-ion-card > img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  display: block;
-}
-
-/* header layout: avatar + texts */
-ion-card ion-card-header {
+.profile-container {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  justify-content: center;
+  padding: 20px;
+  min-height: 100%;
 }
 
-/* avatar inside header */
-ion-card ion-avatar {
-  width: 72px;
-  height: 72px;
-  flex: 0 0 72px;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-}
-
-/* title / subtitle */
-ion-card ion-card-title {
-  font-size: 1.15rem;
+.profile-card {
+  max-width: 500px;
+  width: 100%;
   margin: 0;
-  line-height: 1.1;
+  background: var(--ion-card-background, #fff);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
 }
 
-ion-card ion-card-subtitle {
-  font-size: 0.92rem;
-  color: var(--ion-color-medium);
-  margin-top: 4px;
+.profile-avatar-container {
+  display: flex;
+  justify-content: center;
+  padding: 32px 20px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* content */
-ion-card ion-card-content {
-  padding: 12px 16px 18px;
-  font-size: 0.96rem;
-  color: var(--ion-color-primary-contrast, rgba(0,0,0,0.85));
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
 }
 
-/* small screens */
-@media (max-width: 480px) {
-  ion-card {
-    margin: 8px;
+.profile-header {
+  text-align: center;
+  padding: 20px 20px 10px;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: var(--ion-text-color, #000) !important;
+}
+
+.profile-username {
+  font-size: 16px;
+  margin-top: 8px;
+  color: var(--ion-color-medium) !important;
+  opacity: 0.8;
+}
+
+.profile-bio {
+  text-align: center;
+  padding: 10px 20px 24px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ion-text-color, #000) !important;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .profile-card {
+    background: var(--ion-card-background, #1e1e1e);
   }
-  ion-card > img {
-    height: 120px;
+
+  .profile-name {
+    color: #ffffff !important;
   }
-  ion-card ion-avatar {
-    width: 56px;
-    height: 56px;
-    flex: 0 0 56px;
+
+  .profile-username {
+    color: rgba(255, 255, 255, 0.7) !important;
   }
-  ion-card ion-card-title {
-    font-size: 1rem;
+
+  .profile-bio {
+    color: rgba(255, 255, 255, 0.9) !important;
   }
-  ion-card ion-card-subtitle {
-    font-size: 0.85rem;
-  }
-  ion-card ion-card-content {
-    font-size: 0.92rem;
+
+  .profile-avatar {
+    border-color: rgba(255, 255, 255, 0.2);
   }
 }
 
-/* medium screens */
-@media (min-width: 481px) and (max-width: 1024px) {
-  ion-card > img {
-    height: 140px;
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 16px;
   }
-  ion-card ion-avatar {
-    width: 64px;
-    height: 64px;
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-name {
+    font-size: 20px;
+  }
+
+  .profile-username {
+    font-size: 14px;
+  }
+
+  .profile-bio {
+    font-size: 14px;
   }
 }
-
-/* utilities */
-ion-card a {
-  color: var(--ion-color-primary);
-  text-decoration: none;
-}
-ion-card a:hover {
-  text-decoration: underline;
-}
-
-/* ...existing code... */

@@ -1,9 +1,9 @@
 import axios from "axios";
 import { RepositoryItem } from "../interfaces/RepositoryItem";
 import { UserInfo } from '../interfaces/UserInfo';
+import AuthService from './AuthService';
 
-// 1. FORZAMOS LA URL Y EL TOKEN DIRECTAMENTE DESDE EL ENV
-const GITHUB_API_URL = 'https://api.github.com'; 
+const GITHUB_API_URL = 'https://api.github.com';
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_API_TOKEN;
 
 const githubApi = axios.create({
@@ -11,9 +11,16 @@ const githubApi = axios.create({
 });
 
 githubApi.interceptors.request.use((config) => {
-    // Priorizamos el token del archivo .env para asegurar la conexión
-    if (GITHUB_TOKEN) {
-        config.headers.Authorization = `Bearer ${GITHUB_TOKEN.trim()}`;
+    // Priorizar el token del .env si existe, sino usar el del login
+    const token = GITHUB_TOKEN || AuthService.getToken();
+
+    console.log('🔑 Token disponible:', token ? `${token.substring(0, 10)}...` : 'NO HAY TOKEN');
+    console.log('📍 Origen del token:', GITHUB_TOKEN ? '.env' : 'localStorage');
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token.trim()}`;
+    } else {
+        console.error('❌ No se encontró ningún token de GitHub');
     }
     return config;
 }, (error) => {
@@ -25,6 +32,7 @@ githubApi.interceptors.request.use((config) => {
  */
 export const fetchRepositories = async (): Promise<RepositoryItem[]> => {
     try {
+        console.log('📡 Solicitando repositorios a GitHub...');
         const response = await githubApi.get(`/user/repos`, {
             params: {
                 per_page: 100,
@@ -34,11 +42,15 @@ export const fetchRepositories = async (): Promise<RepositoryItem[]> => {
             }
         });
 
+        console.log('✅ Respuesta recibida:', response.status);
+
         // VALIDACIÓN ANTI-ERROR: Si la respuesta es HTML (localhost) o error, devolvemos array vacío
         if (!Array.isArray(response.data)) {
-            console.error("La API no devolvió un arreglo. Revisa la pestaña Network.");
+            console.error("❌ La API no devolvió un arreglo. Revisa la pestaña Network.");
             return [];
         }
+
+        console.log(`📦 ${response.data.length} repositorios encontrados`);
 
         const repositories: RepositoryItem[] = response.data.map((repo: any) => ({
             name: repo.name,
@@ -52,7 +64,18 @@ export const fetchRepositories = async (): Promise<RepositoryItem[]> => {
 
     } catch (error: any) {
         const errorMsg = error.response?.data?.message || error.message;
-        console.error("Error al obtener repositorios:", error.response?.status, errorMsg);
+        const status = error.response?.status;
+
+        console.error("❌ Error al obtener repositorios:");
+        console.error("  - Status:", status);
+        console.error("  - Mensaje:", errorMsg);
+
+        if (status === 401) {
+            console.error("  - Token inválido o expirado. Genera un nuevo token en: https://github.com/settings/tokens");
+        } else if (status === 403) {
+            console.error("  - Token sin permisos suficientes. Asegúrate de tener el scope 'repo'");
+        }
+
         return [];
     }
 }
@@ -86,5 +109,62 @@ export const getUserInfo = async (): Promise<UserInfo> => {
             bio: "Verifica los permisos de tu Token.",
             avatar_url: "https://img.icons8.com/ios_filled/1200/unfriend-male.jpg",
         };
+    }
+};
+
+/**
+ * Elimina un repositorio
+ */
+export const deleteRepository = async (owner: string, repoName: string): Promise<void> => {
+    try {
+        console.log(`🗑️ Eliminando repositorio: ${owner}/${repoName}`);
+        const response = await githubApi.delete(`/repos/${owner}/${repoName}`);
+        console.log("✅ Repositorio eliminado con éxito:", response.status);
+    } catch (error: any) {
+        const errorMsg = error.response?.data?.message || error.message;
+        const status = error.response?.status;
+
+        console.error("❌ Error al eliminar el repositorio:");
+        console.error("  - Status:", status);
+        console.error("  - Mensaje:", errorMsg);
+
+        if (status === 404) {
+            console.error("  - El repositorio no existe o ya fue eliminado");
+        } else if (status === 403) {
+            console.error("  - No tienes permisos para eliminar este repositorio");
+            console.error("  - Asegúrate de que el token tenga el scope 'delete_repo'");
+        }
+
+        throw error;
+    }
+};
+
+/**
+ * Actualiza un repositorio existente
+ */
+export const updateRepository = async (
+    owner: string,
+    repoName: string,
+    updates: { name?: string; description?: string }
+): Promise<void> => {
+    try {
+        console.log(`✏️ Actualizando repositorio: ${owner}/${repoName}`);
+        const response = await githubApi.patch(`/repos/${owner}/${repoName}`, updates);
+        console.log("✅ Repositorio actualizado con éxito:", response.data);
+    } catch (error: any) {
+        const errorMsg = error.response?.data?.message || error.message;
+        const status = error.response?.status;
+
+        console.error("❌ Error al actualizar el repositorio:");
+        console.error("  - Status:", status);
+        console.error("  - Mensaje:", errorMsg);
+
+        if (status === 404) {
+            console.error("  - El repositorio no existe");
+        } else if (status === 422) {
+            console.error("  - Datos de actualización inválidos");
+        }
+
+        throw error;
     }
 };

@@ -1,0 +1,25 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-container p {
+  color: var(--ion-color-medium);
+  font-size: 1rem;
+}
+
+.error-card {
+  margin: 16px;
+}
+
+.error-card ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.error-card li {
+  margin-bottom: 5px;
+}
